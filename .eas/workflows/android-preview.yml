@@ -1,0 +1,13 @@
+name: Android preview build
+
+# Builds an installable Android APK on Expo's servers whenever master is pushed.
+on:
+  push:
+    branches: ['master']
+
+jobs:
+  build_android:
+    type: build
+    params:
+      platform: android
+      profile: preview
