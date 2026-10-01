@@ -1,6 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { SymbolView } from "expo-symbols";
 import { useMemo, useState } from "react";
+import { useRouter } from "expo-router";
 import { Linking, Platform, Pressable, View } from "react-native";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
@@ -37,6 +38,7 @@ function Sym({ ios, android, color, size = 22 }: { ios: string; android: string;
 
 export default function Church() {
   const { theme } = useTheme();
+  const router = useRouter();
   const now = useMemo(() => new Date(), []);
   const [filter, setFilter] = useState<Filter>("all");
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -188,6 +190,19 @@ export default function Church() {
         ))}
         <AppText variant="small" color="muted" style={{ paddingVertical: 10 }}>Office hours: {CONTACT.hours}</AppText>
       </Card>
+
+      <Pressable accessibilityRole="button" onPress={() => router.push("/(tabs)/give")}>
+        <Card style={{ flexDirection: "row", alignItems: "center", gap: 14, minHeight: 72, borderColor: theme.gold }}>
+          <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: theme.gold, alignItems: "center", justifyContent: "center" }}>
+            <Sym ios="heart.fill" android="favorite" color={theme.onAccent} size={22} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <AppText variant="h3">Give</AppText>
+            <AppText variant="small" color="muted">Tithes, offerings and banking details</AppText>
+          </View>
+          <Sym ios="chevron.right" android="chevron_right" color={theme.muted} size={18} />
+        </Card>
+      </Pressable>
 
       <AppText variant="label" style={{ marginTop: 6 }}>About CTPMI</AppText>
       <Card style={{ gap: 10 }}>

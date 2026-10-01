@@ -79,6 +79,7 @@ export default function Profile() {
         />
       </Card>
 
+      <Button label="Give" kind="gold" onPress={() => router.push("/(tabs)/give")} />
       <Button label="Sign out" kind="ghost" onPress={signOut} />
       <Button label="Delete account" kind="danger" onPress={deleteAccount} />
     </Screen>
