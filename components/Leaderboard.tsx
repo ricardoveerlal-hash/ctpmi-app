@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import Animated, { FadeInRight, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 
-import { AppText, Card, Chip, ErrorBlock, LoadingBlock, Screen, useAsync } from "@/components/ui";
+import { AppText, Card, Chip, ErrorBlock, LoadingBlock, useAsync } from "@/components/ui";
 import { api, type LeaderboardEntry, type LeaderboardRange } from "@/lib/api";
 import { isMonthViewLive, winnerTitle } from "@/lib/season";
 import { useTheme } from "@/lib/theme";
@@ -35,7 +35,7 @@ function PodiumBar({ entry, height, color, delay }: { entry: LeaderboardEntry; h
   );
 }
 
-export default function Ranks() {
+export default function Leaderboard() {
   const { theme } = useTheme();
   const monthLive = isMonthViewLive();
   const ranges = RANGES.filter((r) => r.key !== "month" || monthLive);
@@ -51,9 +51,7 @@ export default function Ranks() {
   const winner = season.data?.latestWinner;
 
   return (
-    <Screen>
-      <AppText variant="title">Leaderboard</AppText>
-
+    <>
       {winner && (
         <Card style={{ borderColor: theme.gold, gap: 4 }}>
           <AppText variant="label">{winnerTitle(winner.monthKey, winner.monthLabel)}</AppText>
@@ -104,6 +102,6 @@ export default function Ranks() {
 
       {/* The API returns display names only, so the signed-in member is not
           highlighted yet. Add `isYou` (or waId) to /web/leaderboard to do it. */}
-    </Screen>
+    </>
   );
 }

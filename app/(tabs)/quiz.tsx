@@ -1,18 +1,20 @@
-import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import Animated, { ZoomIn } from "react-native-reanimated";
 
+import Leaderboard from "@/components/Leaderboard";
 import QuizPlayer from "@/components/QuizPlayer";
+import { Segmented } from "@/components/Segmented";
 import { AppText, Button, Card, ErrorBlock, LoadingBlock, LogoOrbit, Screen } from "@/components/ui";
 import { api, type QuizAnswerResponse, type QuizTodayResponse } from "@/lib/api";
 import { useSession } from "@/lib/session";
 
 type Phase = "loading" | "intro" | "play" | "already" | "results" | "error";
+type Section = "play" | "board";
 
 export default function QuizTab() {
-  const router = useRouter();
   const { session } = useSession();
+  const [section, setSection] = useState<Section>("play");
   const [phase, setPhase] = useState<Phase>("loading");
   const [quiz, setQuiz] = useState<QuizTodayResponse | null>(null);
   const [result, setResult] = useState<QuizAnswerResponse | null>(null);
@@ -57,10 +59,24 @@ export default function QuizTab() {
 
   return (
     <Screen>
-      {phase === "loading" && <LoadingBlock label="Loading today's quiz" />}
-      {phase === "error" && <ErrorBlock message={errorMsg} onRetry={load} />}
+      {/* The switch is hidden mid-quiz so a player cannot walk out of a question. */}
+      {(section === "board" || phase !== "play") && (
+        <Segmented
+          options={[
+            { key: "play", label: "Play" },
+            { key: "board", label: "Leaderboard" },
+          ]}
+          value={section}
+          onChange={setSection}
+        />
+      )}
 
-      {phase === "intro" && quiz && (
+      {section === "board" && <Leaderboard />}
+
+      {section === "play" && phase === "loading" && <LoadingBlock label="Loading today's quiz" />}
+      {section === "play" && phase === "error" && <ErrorBlock message={errorMsg} onRetry={load} />}
+
+      {section === "play" && phase === "intro" && quiz && (
         <View style={{ alignItems: "center", gap: 12 }}>
           <LogoOrbit size={90} />
           <AppText variant="title">Bible Quiz</AppText>
@@ -71,21 +87,21 @@ export default function QuizTab() {
         </View>
       )}
 
-      {phase === "play" && quiz && (
+      {section === "play" && phase === "play" && quiz && (
         <QuizPlayer tierName={quiz.tierName} questions={quiz.questions} submitting={submitting} errorMsg={errorMsg} onFinish={finish} />
       )}
 
-      {phase === "already" && quiz && (
+      {section === "play" && phase === "already" && quiz && (
         <Card style={{ gap: 10 }}>
           <AppText variant="h2">You&apos;ve already played today</AppText>
           <AppText color="muted">
             {quiz.totalCorrect} correct across {quiz.totalPlayed} quizzes overall. Come back tomorrow for a new one.
           </AppText>
-          <Button label="View the leaderboard" kind="teal" onPress={() => router.push("/(tabs)/ranks")} />
+          <Button label="View the leaderboard" kind="teal" onPress={() => setSection("board")} />
         </Card>
       )}
 
-      {phase === "results" && result && (
+      {section === "play" && phase === "results" && result && (
         <View style={{ gap: 14 }}>
           <Animated.View entering={ZoomIn.duration(500)}>
             <Card style={{ alignItems: "center", gap: 6 }}>
@@ -108,7 +124,7 @@ export default function QuizTab() {
               </AppText>
             </Card>
           ))}
-          <Button label="See the leaderboard" kind="teal" onPress={() => router.push("/(tabs)/ranks")} />
+          <Button label="See the leaderboard" kind="teal" onPress={() => setSection("board")} />
         </View>
       )}
     </Screen>

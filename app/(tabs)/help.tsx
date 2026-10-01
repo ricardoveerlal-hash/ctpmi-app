@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Linking, Pressable, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -14,6 +15,7 @@ const WHATSAPP = "https://wa.me/27834834334";
 // Answers come from the bot's Church FAQ Answers table; this static copy is a
 // placeholder until the FAQ is served from the API so the office can edit it.
 const FAQS = [
+  { q: "When are the services?", a: "Sundays at 7:30 AM and 10:00 AM. Tuesday prayer is at 10:00 AM and Cell Groups meet on Thursday at 7:00 PM. The Church tab has the full week." },
   { q: "Who leads CTPMI?", a: "Senior Pastor Clive Gopaul leads CTPMI. Your zone pastor is your first point of contact for pastoral care." },
   { q: "How do I request anointing oil?", a: "Send a request with your name and zone to the church office and they will arrange it for you." },
   { q: "What do I do in an emergency?", a: "Call 10177 or 112 first. Then contact your zone pastor or the church office so we can support you." },
@@ -23,6 +25,7 @@ const TYPES: PrayerRequestType[] = ["Prayer Request", "Home Visit", "Pastoral Ca
 
 export default function Help() {
   const { theme } = useTheme();
+  const router = useRouter();
   const { session } = useSession();
   const [open, setOpen] = useState(-1);
 
@@ -112,6 +115,7 @@ export default function Help() {
         ))}
       </View>
 
+      <Button label="Service times and location" kind="ghost" onPress={() => router.push("/(tabs)/church")} />
       <Button label="Chat with us on WhatsApp" kind="teal" onPress={() => Linking.openURL(WHATSAPP)} />
       <Button label="Emergency: call 10177" kind="danger" onPress={() => Linking.openURL("tel:10177")} />
     </Screen>

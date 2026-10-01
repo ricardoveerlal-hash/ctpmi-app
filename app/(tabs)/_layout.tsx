@@ -34,7 +34,7 @@ export default function TabLayout() {
     >
       <Tabs.Screen name="index" options={{ title: "Today", tabBarIcon: icon({ ios: "house.fill", android: "home", web: "home" }) }} />
       <Tabs.Screen name="quiz" options={{ title: "Quiz", tabBarIcon: icon({ ios: "questionmark.circle.fill", android: "quiz", web: "quiz" }) }} />
-      <Tabs.Screen name="ranks" options={{ title: "Ranks", tabBarIcon: icon({ ios: "chart.bar.fill", android: "leaderboard", web: "leaderboard" }) }} />
+      <Tabs.Screen name="church" options={{ title: "Church", tabBarIcon: icon({ ios: "building.columns.fill", android: "church", web: "church" }) }} />
       <Tabs.Screen name="help" options={{ title: "Help", tabBarIcon: icon({ ios: "bubble.left.fill", android: "chat", web: "chat" }) }} />
       <Tabs.Screen name="profile" options={{ title: "Profile", tabBarIcon: icon({ ios: "person.fill", android: "person", web: "person" }) }} />
     </Tabs>
