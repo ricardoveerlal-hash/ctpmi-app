@@ -55,7 +55,7 @@ with a dark and a light palette and a persisted toggle.
 
 1. **Icon and splash** are placeholders upscaled from the 168 px website logo.
    Replace `assets/images/*` with a 1024 px (or vector) logo before store submission.
-2. **Bundle id** `za.org.ctpmi.app` is a placeholder; set it once the publisher
+2. **Bundle id** `online.ctpmi.app` is a placeholder; set it once the publisher
    entity is decided.
 3. **Login has no verification** (same as the website: cell number only). Add an
    OTP step before public release.

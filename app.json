@@ -9,10 +9,10 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "za.org.ctpmi.app"
+      "bundleIdentifier": "online.ctpmi.app"
     },
     "android": {
-      "package": "za.org.ctpmi.app",
+      "package": "online.ctpmi.app",
       "adaptiveIcon": {
         "backgroundColor": "#050d1a",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
