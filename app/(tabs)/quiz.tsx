@@ -9,7 +9,7 @@ import { AppText, Button, Card, ErrorBlock, LoadingBlock, LogoOrbit, Screen } fr
 import { api, type QuizAnswerResponse, type QuizTodayResponse } from "@/lib/api";
 import { useSession } from "@/lib/session";
 
-type Phase = "loading" | "intro" | "play" | "already" | "results" | "error";
+type Phase = "loading" | "intro" | "play" | "already" | "results" | "error" | "notready";
 type Section = "play" | "board";
 
 export default function QuizTab() {
@@ -28,7 +28,9 @@ export default function QuizTab() {
       .getQuizToday(session.waId)
       .then((d) => {
         setQuiz(d);
-        setPhase(d.alreadyPlayed ? "already" : "intro");
+        // New questions are generated each morning around 06:05 (SAST). Before that the
+        // API returns an empty list, so say so instead of showing an empty quiz.
+        setPhase(d.alreadyPlayed ? "already" : d.questions.length === 0 ? "notready" : "intro");
       })
       .catch(() => {
         setErrorMsg("Couldn't load today's quiz. Try again in a moment.");
@@ -75,6 +77,17 @@ export default function QuizTab() {
 
       {section === "play" && phase === "loading" && <LoadingBlock label="Loading today's quiz" />}
       {section === "play" && phase === "error" && <ErrorBlock message={errorMsg} onRetry={load} />}
+
+      {section === "play" && phase === "notready" && (
+        <Card style={{ gap: 10 }}>
+          <AppText variant="h2">Today&apos;s quiz isn&apos;t ready yet</AppText>
+          <AppText color="muted">
+            Fresh questions are prepared every morning. Check back after 6:15 AM, and in the meantime see where you stand on the leaderboard.
+          </AppText>
+          <Button label="Check again" onPress={load} />
+          <Button label="View the leaderboard" kind="teal" onPress={() => setSection("board")} />
+        </Card>
+      )}
 
       {section === "play" && phase === "intro" && quiz && (
         <View style={{ alignItems: "center", gap: 12 }}>
