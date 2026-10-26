@@ -34,6 +34,14 @@ function Row({ label, value }: { label: string; value?: string | null }) {
   );
 }
 
+// Stored numbers are a mix of "0823795056" and "27823795056"; show 0xx either way.
+function displayCell(raw?: string): string | null {
+  const digits = (raw ?? "").replace(/\D/g, "");
+  if (!digits) return null;
+  if (digits.startsWith("27")) return "0" + digits.slice(2);
+  return digits.startsWith("0") ? digits : "0" + digits;
+}
+
 export default function Profile() {
   const router = useRouter();
   const { theme, isDark, toggle } = useTheme();
@@ -153,7 +161,7 @@ export default function Profile() {
 
       {p?.found && (
         <Card>
-          <Row label="Cell number" value={p.cellNumber ? "0" + p.cellNumber.replace(/^27/, "") : null} />
+          <Row label="Cell number" value={displayCell(p.cellNumber)} />
           <Row label="Email" value={p.email} />
           <Row label="Birthday" value={birthday} />
           <Row label="CTPMI member" value={p.isCtpmiMember === undefined ? null : p.isCtpmiMember ? "Yes" : "No"} />
