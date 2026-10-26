@@ -109,6 +109,25 @@ export interface LoginResponse {
   zone?: string;
 }
 
+export interface ProfileUpdatePayload {
+  wa_id: string;
+  firstName: string;
+  surname?: string;
+  zone?: string;
+  email?: string;
+  // Always sent: the backend overwrites this on every update.
+  isCtpmiMember: boolean;
+  birthDay?: number;
+  birthMonth?: number;
+}
+
+export interface ProfileUpdateResponse {
+  success: boolean;
+  error?: string;
+  fullName?: string;
+  zone?: string;
+}
+
 export interface RegisterPayload {
   wa_id: string;
   firstName: string;
@@ -275,6 +294,8 @@ export const api = {
     postJson<RegisterResponse>("web/register", payload),
   getProfile: (waId: string) =>
     getJson<ProfileResponse>("web/profile", { wa_id: waId }),
+  updateProfile: (payload: ProfileUpdatePayload) =>
+    postJson<ProfileUpdateResponse>("web/profile/update", payload),
   sendPrayerRequest: (payload: PrayerRequestPayload) =>
     postJson<unknown>("website-prayer-request", payload),
 

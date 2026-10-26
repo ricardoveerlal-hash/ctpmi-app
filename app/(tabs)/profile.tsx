@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Alert, Linking, Pressable, Switch, View } from "react-native";
 
@@ -49,6 +49,14 @@ export default function Profile() {
   const waId = session?.waId ?? "";
   const profile = useAsync(() => api.getProfile(waId), [waId]);
   const p = profile.data;
+
+  // Pick up changes made on the Edit screen when coming back.
+  const reloadProfile = profile.reload;
+  useFocusEffect(
+    useCallback(() => {
+      reloadProfile();
+    }, [reloadProfile])
+  );
 
   const [localAvatar, setLocalAvatar] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -165,6 +173,7 @@ export default function Profile() {
           <Row label="Email" value={p.email} />
           <Row label="Birthday" value={birthday} />
           <Row label="CTPMI member" value={p.isCtpmiMember === undefined ? null : p.isCtpmiMember ? "Yes" : "No"} />
+          <Button label="Edit my details" kind="ghost" onPress={() => router.push("/edit-profile")} style={{ marginTop: 6 }} />
         </Card>
       )}
 
