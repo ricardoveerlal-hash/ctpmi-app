@@ -2,6 +2,7 @@ import { Redirect, Tabs } from "expo-router";
 import type { ColorValue } from "react-native";
 import { SymbolView } from "expo-symbols";
 
+import { useFirstRunPrompts } from "@/lib/firstRun";
 import { fonts, useTheme } from "@/lib/theme";
 import { useSession } from "@/lib/session";
 
@@ -17,6 +18,7 @@ function icon(name: IconName) {
 export default function TabLayout() {
   const { theme } = useTheme();
   const { session, loading } = useSession();
+  useFirstRunPrompts(session?.waId ?? "");
 
   if (loading) return null;
   if (!session) return <Redirect href="/login" />;

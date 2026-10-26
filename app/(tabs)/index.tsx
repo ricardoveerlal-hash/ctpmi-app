@@ -33,8 +33,8 @@ export default function Today() {
   const today = new Date().toLocaleDateString("en-ZA", { weekday: "long", day: "numeric", month: "long" });
 
   return (
-    <Screen>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginRight: 52 }}>
+    <Screen bell>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginRight: 104 }}>
         <Image source={LOGO} style={{ width: 44, height: 44, borderRadius: 22 }} accessibilityLabel="CTPMI logo" />
         <View style={{ flex: 1 }}>
           <AppText variant="small" color="muted">{today}</AppText>

@@ -140,6 +140,49 @@ export interface ProfileResponse {
   birthMonth?: number | null;
   isCtpmiMember?: boolean;
   registeredAt?: string;
+  // Profile picture served by the backend; null/absent until one is uploaded.
+  avatarUrl?: string | null;
+}
+
+export interface AvatarUploadResponse {
+  success: boolean;
+  avatarUrl?: string;
+  error?: string;
+}
+
+// A message from church leadership, shown in the in-app inbox. The same message
+// is also delivered as a push notification to members who allowed them.
+export interface InboxMessage {
+  id: string;
+  title: string;
+  body: string;
+  sentAt: string; // ISO 8601
+  read: boolean;
+  // Optional in-app route ("/quiz") or https link to open from the message.
+  url?: string;
+}
+
+export interface InboxResponse {
+  messages: InboxMessage[];
+  unread: number;
+}
+
+export interface PushTokenPayload {
+  wa_id: string;
+  token: string;
+  platform: "ios" | "android";
+}
+
+// Approximate place a member opened the app from (see lib/location.ts).
+export interface LoginLocationPayload {
+  wa_id: string;
+  latitude: number;
+  longitude: number;
+  city?: string | null;
+  region?: string | null;
+  country?: string | null;
+  platform: "ios" | "android";
+  capturedAt: string; // ISO 8601
 }
 
 export interface SeasonWinner {
@@ -233,4 +276,20 @@ export const api = {
     getJson<ProfileResponse>("web/profile", { wa_id: waId }),
   sendPrayerRequest: (payload: PrayerRequestPayload) =>
     postJson<unknown>("website-prayer-request", payload),
+
+  // --- Notifications, inbox, location and avatar (backend endpoints: see the
+  // "Backend contract" section of README.md) ---
+  registerPushToken: (payload: PushTokenPayload) =>
+    postJson<{ success: boolean }>("web/push/register", payload),
+  getInbox: (waId: string) => getJson<InboxResponse>("web/inbox", { wa_id: waId }),
+  markInboxRead: (waId: string, ids: string[] | "all") =>
+    postJson<{ success: boolean }>("web/inbox/read", { wa_id: waId, ids }),
+  logLoginLocation: (payload: LoginLocationPayload) =>
+    postJson<{ success: boolean }>("web/login-location", payload),
+  uploadAvatar: (waId: string, imageBase64: string) =>
+    postJson<AvatarUploadResponse>("web/profile/avatar", {
+      wa_id: waId,
+      mime: "image/jpeg",
+      image_base64: imageBase64,
+    }),
 };

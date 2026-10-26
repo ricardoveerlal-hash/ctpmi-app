@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -27,6 +28,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useInbox } from "@/lib/inbox";
 import { fonts, useTheme, type Palette } from "@/lib/theme";
 
 export const LOGO = require("../assets/images/logo.png");
@@ -237,6 +239,63 @@ export function ThemeToggle({ style }: { style?: StyleProp<ViewStyle> }) {
   );
 }
 
+/* ------------------------------------------------------------ inbox bell */
+
+export function InboxBell({ style }: { style?: StyleProp<ViewStyle> }) {
+  const { theme } = useTheme();
+  const router = useRouter();
+  const { unread } = useInbox();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={unread ? `Inbox, ${unread} unread` : "Inbox"}
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+        router.push("/inbox");
+      }}
+      style={[
+        {
+          width: 44,
+          height: 44,
+          borderRadius: 22,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: theme.card,
+          borderColor: theme.line,
+          borderWidth: 1,
+        },
+        style,
+      ]}
+    >
+      <SymbolView
+        name={{ ios: "bell.fill", android: "notifications", web: "notifications" }}
+        tintColor={theme.gold}
+        size={22}
+      />
+      {unread > 0 && (
+        <View
+          style={{
+            position: "absolute",
+            top: -2,
+            right: -2,
+            minWidth: 18,
+            height: 18,
+            paddingHorizontal: 4,
+            borderRadius: 9,
+            backgroundColor: theme.red,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontFamily: fonts.bodySemi, fontSize: 11, color: "#ffffff" }}>
+            {unread > 9 ? "9+" : unread}
+          </Text>
+        </View>
+      )}
+    </Pressable>
+  );
+}
+
 /* ------------------------------------------------------------- background */
 
 // Deterministic so the sky is the same on every launch.
@@ -301,11 +360,13 @@ export function Screen({
   scroll = true,
   contentStyle,
   toggle = true,
+  bell = false,
 }: {
   children: ReactNode;
   scroll?: boolean;
   contentStyle?: StyleProp<ViewStyle>;
   toggle?: boolean;
+  bell?: boolean; // inbox bell next to the theme toggle (signed-in screens only)
 }) {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -326,6 +387,7 @@ export function Screen({
         <View style={[{ flex: 1 }, pad, contentStyle]}>{children}</View>
       )}
       {toggle && <ThemeToggle style={{ position: "absolute", top: insets.top + 6, right: 12 }} />}
+      {bell && <InboxBell style={{ position: "absolute", top: insets.top + 6, right: 64 }} />}
     </View>
   );
 }
