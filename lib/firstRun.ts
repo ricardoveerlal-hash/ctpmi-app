@@ -73,7 +73,7 @@ export function useFirstRunPrompts(waId: string) {
       } else if (choice === null) {
         const yes = await ask(
           "Share where you log in from?",
-          "Church leadership can see the suburb members open the app from, so we understand who we are reaching.\n\nWe only check while the app is open, keep it to about 100 m, and never track you in the background. You can switch this off any time in Profile.",
+          "Church leadership can see the suburb members open the app from, so we understand who we are reaching.\n\nWe only check while the app is open (you will show as online to leadership), keep it to about 100 m, and never track you in the background. You can switch this off any time in Profile.",
           "Allow",
           "Not now"
         );

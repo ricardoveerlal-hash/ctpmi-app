@@ -3,6 +3,7 @@ import type { ColorValue } from "react-native";
 import { SymbolView } from "expo-symbols";
 
 import { useFirstRunPrompts } from "@/lib/firstRun";
+import { usePresence } from "@/lib/presence";
 import { fonts, useTheme } from "@/lib/theme";
 import { useSession } from "@/lib/session";
 
@@ -19,6 +20,7 @@ export default function TabLayout() {
   const { theme } = useTheme();
   const { session, loading } = useSession();
   useFirstRunPrompts(session?.waId ?? "");
+  usePresence(session?.waId ?? "");
 
   if (loading) return null;
   if (!session) return <Redirect href="/login" />;

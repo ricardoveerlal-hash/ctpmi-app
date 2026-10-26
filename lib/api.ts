@@ -306,6 +306,8 @@ export const api = {
   getInbox: (waId: string) => getJson<InboxResponse>("web/inbox", { wa_id: waId }),
   markInboxRead: (waId: string, ids: string[] | "all") =>
     postJson<{ success: boolean }>("web/inbox/read", { wa_id: waId, ids }),
+  sendPresence: (payload: { wa_id: string; suburb?: string | null; city?: string | null }) =>
+    postJson<{ success: boolean }>("web/presence", payload),
   logLoginLocation: (payload: LoginLocationPayload) =>
     postJson<{ success: boolean }>("web/login-location", payload),
   uploadAvatar: (waId: string, imageBase64: string) =>
