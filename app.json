@@ -38,7 +38,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "CTPMI uses your approximate location while the app is open so church leadership can see which area members log in from. It is never tracked in the background."
+          "locationWhenInUsePermission": "CTPMI uses your your location (about 100 m) while the app is open so church leadership can see which suburb members log in from. It is never tracked in the background."
         }
       ],
       [

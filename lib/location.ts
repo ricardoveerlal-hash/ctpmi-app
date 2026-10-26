@@ -10,9 +10,10 @@ const supported = Platform.OS === "ios" || Platform.OS === "android";
 // from", not a movement trail.
 const MIN_GAP_MS = 6 * 60 * 60 * 1000;
 
-// Coordinates are rounded to 2 decimals (about 1 km). That is enough to see
-// the suburb or town a member logs in from without pinpointing their home.
-const round = (n: number) => Math.round(n * 100) / 100;
+// Coordinates are rounded to 3 decimals (about 100 m) and we store the suburb
+// name. That shows which suburb or neighbourhood a member logs in from, but not
+// a street address or house.
+const round = (n: number) => Math.round(n * 1000) / 1000;
 
 export type LocationPermission = "granted" | "denied" | "undetermined" | "unsupported";
 
@@ -60,6 +61,7 @@ export async function checkInLocation(waId: string, opts?: { force?: boolean }):
       wa_id: waId,
       latitude: round(latitude),
       longitude: round(longitude),
+      suburb: place?.district ?? place?.subregion ?? null,
       city: place?.city ?? place?.subregion ?? null,
       region: place?.region ?? null,
       country: place?.country ?? null,

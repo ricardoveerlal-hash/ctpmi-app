@@ -180,7 +180,7 @@ export default function Profile() {
           <View style={{ flex: 1 }}>
             <AppText variant="bodyStrong">Share where I log in from</AppText>
             <AppText variant="small" color="muted">
-              Approximate area only, while the app is open. Never in the background.
+              Your suburb only (about 100 m), while the app is open. Never in the background.
             </AppText>
           </View>
           <Switch

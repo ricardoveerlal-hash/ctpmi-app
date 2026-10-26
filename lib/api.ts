@@ -178,6 +178,7 @@ export interface LoginLocationPayload {
   wa_id: string;
   latitude: number;
   longitude: number;
+  suburb?: string | null;
   city?: string | null;
   region?: string | null;
   country?: string | null;
