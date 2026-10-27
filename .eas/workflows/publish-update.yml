@@ -1,0 +1,20 @@
+name: Publish over-the-air update
+
+# Sends app code changes straight to installed apps (preview channel). Members
+# get it the next time they open the app, usually after one restart.
+on:
+  push:
+    branches: ['master']
+    paths:
+      - app/**
+      - components/**
+      - lib/**
+      - assets/**
+
+jobs:
+  publish_update:
+    type: update
+    params:
+      channel: preview
+      platform: android
+      message: Update from master

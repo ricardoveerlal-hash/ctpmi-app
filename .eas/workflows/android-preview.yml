@@ -1,9 +1,17 @@
 name: Android preview build
 
-# Builds an installable Android APK on Expo's servers whenever master is pushed.
+# Builds an installable Android APK on Expo's servers. Only runs when something
+# native changes (packages, app.json, eas.json). Ordinary code changes go out as
+# an over-the-air update instead (see publish-update.yml), so members do not need
+# to install a new APK.
 on:
   push:
     branches: ['master']
+    paths:
+      - package.json
+      - package-lock.json
+      - app.json
+      - eas.json
 
 jobs:
   build_android:
