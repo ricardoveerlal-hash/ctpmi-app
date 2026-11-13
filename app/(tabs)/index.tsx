@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Linking, Pressable, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
+import { ImageViewer } from "@/components/ImageViewer";
 import { AppText, Button, Card, ErrorBlock, LOGO, LoadingBlock, Screen, useAsync } from "@/components/ui";
 import { api } from "@/lib/api";
 import { useSession } from "@/lib/session";
@@ -26,6 +27,7 @@ export default function Today() {
 
   const [revealed, setRevealed] = useState(false);
   const [devoOpen, setDevoOpen] = useState(false);
+  const [flyerOpen, setFlyerOpen] = useState(false);
 
   const v = verse.data;
   const q = quiz.data;
@@ -119,9 +121,13 @@ export default function Today() {
 
       {n?.active && !!n.imageUrl && (
         <Card style={{ padding: 0, overflow: "hidden" }}>
-          <Image source={{ uri: n.imageUrl }} style={{ width: "100%", height: 170 }} contentFit="cover" accessibilityLabel={n.title ?? "Latest news"} />
+          <Pressable accessibilityRole="imagebutton" accessibilityLabel={`${n.title ?? "Latest news"}. Tap to enlarge`} onPress={() => setFlyerOpen(true)}>
+            <Image source={{ uri: n.imageUrl }} style={{ width: "100%", height: 170 }} contentFit="cover" accessibilityLabel={n.title ?? "Latest news"} />
+          </Pressable>
+          <ImageViewer uri={n.imageUrl} visible={flyerOpen} onClose={() => setFlyerOpen(false)} label={n.title ?? "Latest news"} />
           <View style={{ padding: 16, gap: 6 }}>
             <AppText variant="label">Latest news</AppText>
+            <AppText variant="small" color="muted">Tap the picture to see it in full</AppText>
             <AppText variant="h3">{n.title ?? "From the church office"}</AppText>
             {!!n.caption && <AppText color="muted">{n.caption}</AppText>}
             {!!n.linkUrl && /^https?:/i.test(n.linkUrl) && (

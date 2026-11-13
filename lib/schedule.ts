@@ -31,7 +31,7 @@ export interface Slot {
   m: number;
 }
 
-export type CtaAction = "directions" | "facebook" | "youth";
+export type CtaAction = "directions" | "facebook" | "youth" | "office";
 
 export interface Service {
   id: string;
@@ -41,7 +41,8 @@ export interface Service {
   note: string;
   online: boolean;
   slots: Slot[];
-  cta?: { label: string; action: CtaAction };
+  // loc picks which LOCATIONS entry "directions" opens (default: church building).
+  cta?: { label: string; action: CtaAction; loc?: "church" | "office" };
 }
 
 export const SERVICES: Service[] = [
@@ -60,10 +61,10 @@ export const SERVICES: Service[] = [
     days: "TUE",
     title: "Tuesday Prayer",
     time: "10:00 AM",
-    note: "Join the church family in prayer on Tuesday mornings.",
+    note: "Join the church family in prayer on Tuesday mornings at the chapel (282 Moses Kotane Road).",
     online: false,
     slots: [{ day: 2, h: 10, m: 0 }],
-    cta: { label: "Directions", action: "directions" },
+    cta: { label: "Directions", action: "directions", loc: "office" },
   },
   {
     id: "youth",
@@ -90,9 +91,10 @@ export const SERVICES: Service[] = [
     days: "THU",
     title: "Cell Groups",
     time: "7:00 PM",
-    note: "Prayer cells meet across Durban on Thursday evenings.",
+    note: "Prayer cells meet across Durban on Thursday evenings. To join a cell, contact the church office and they will put you in touch with your zone pastor.",
     online: false,
     slots: [{ day: 4, h: 19, m: 0 }],
+    cta: { label: "Call the office", action: "office" },
   },
 ];
 

@@ -17,7 +17,7 @@ import {
   isCommunion,
   nextOccurrence,
   nextService,
-  type CtaAction,
+  type Service,
 } from "@/lib/schedule";
 import { useTheme } from "@/lib/theme";
 
@@ -48,9 +48,10 @@ export default function Church() {
   const loc = LOCATIONS[locIdx];
   const list = SERVICES.filter((s) => filter === "all" || (filter === "online") === s.online);
 
-  function runCta(action: CtaAction) {
-    if (action === "directions") directions(LOCATIONS[0].address);
-    else if (action === "facebook") open(FACEBOOK_URL);
+  function runCta(cta: NonNullable<Service["cta"]>) {
+    if (cta.action === "directions") directions(LOCATIONS.find((l) => l.key === (cta.loc ?? "church"))!.address);
+    else if (cta.action === "office") open(CONTACT.phoneUrl);
+    else if (cta.action === "facebook") open(FACEBOOK_URL);
     else open(SOCIALS[2].url);
   }
 
@@ -83,7 +84,7 @@ export default function Church() {
             <View style={{ marginTop: 10, alignSelf: "flex-start" }}>
               <Pressable
                 accessibilityRole="button"
-                onPress={() => runCta(next.service.cta!.action)}
+                onPress={() => runCta(next.service.cta!)}
                 style={{ minHeight: 44, borderRadius: 12, backgroundColor: "#050d1a", paddingHorizontal: 18, justifyContent: "center" }}
               >
                 <AppText variant="bodyStrong" style={{ color: "#ffffff" }}>{next.service.cta.label}</AppText>
@@ -131,7 +132,7 @@ export default function Church() {
               {isOpen && (
                 <Animated.View entering={FadeIn.duration(250)} style={{ paddingLeft: 72, paddingBottom: 14, gap: 10, alignItems: "flex-start" }}>
                   <AppText variant="small" color="muted">{s.note}</AppText>
-                  {s.cta && <Chip label={s.cta.label} onPress={() => runCta(s.cta!.action)} />}
+                  {s.cta && <Chip label={s.cta.label} onPress={() => runCta(s.cta!)} />}
                 </Animated.View>
               )}
             </View>
