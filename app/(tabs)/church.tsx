@@ -132,7 +132,12 @@ export default function Church() {
               {isOpen && (
                 <Animated.View entering={FadeIn.duration(250)} style={{ paddingLeft: 72, paddingBottom: 14, gap: 10, alignItems: "flex-start" }}>
                   <AppText variant="small" color="muted">{s.note}</AppText>
-                  {s.cta && <Chip label={s.cta.label} onPress={() => runCta(s.cta!)} />}
+                  {(s.cta || s.cta2) && (
+                    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+                      {s.cta && <Chip label={s.cta.label} onPress={() => runCta(s.cta!)} />}
+                      {s.cta2 && <Chip label={s.cta2.label} onPress={() => runCta(s.cta2!)} />}
+                    </View>
+                  )}
                 </Animated.View>
               )}
             </View>

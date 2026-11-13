@@ -43,6 +43,7 @@ export interface Service {
   slots: Slot[];
   // loc picks which LOCATIONS entry "directions" opens (default: church building).
   cta?: { label: string; action: CtaAction; loc?: "church" | "office" };
+  cta2?: { label: string; action: CtaAction; loc?: "church" | "office" };
 }
 
 export const SERVICES: Service[] = [
@@ -71,10 +72,11 @@ export const SERVICES: Service[] = [
     days: "TUE",
     title: "Conquerors Crew (Youth)",
     time: "7:00 PM",
-    note: "The weekly youth gathering. Follow ctpmi_conquerors_crew on Instagram for updates.",
+    note: "The weekly youth gathering at the church building (180 Moses Kotane Road). Follow ctpmi_conquerors_crew on Instagram for updates.",
     online: false,
     slots: [{ day: 2, h: 19, m: 0 }],
-    cta: { label: "Youth page", action: "youth" },
+    cta: { label: "Directions", action: "directions", loc: "church" },
+    cta2: { label: "Youth page", action: "youth" },
   },
   {
     id: "online-prayer",
