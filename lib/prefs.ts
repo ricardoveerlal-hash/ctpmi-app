@@ -5,6 +5,7 @@ const K = {
   pushAsked: "ctpmi_push_asked",
   locationChoice: "ctpmi_location_choice", // "yes" | "no"
   locationLastAt: "ctpmi_location_last_at",
+  locationLastPos: "ctpmi_location_last_pos", // "lat,lng" of the last logged check-in
   presenceNotice: "ctpmi_presence_notice",
 } as const;
 
@@ -31,6 +32,16 @@ export async function getLocationLastAt(): Promise<number> {
 }
 export async function setLocationLastAt(ms: number): Promise<void> {
   await AsyncStorage.setItem(K.locationLastAt, String(ms)).catch(() => {});
+}
+
+export async function getLocationLastPos(): Promise<{ lat: number; lng: number } | null> {
+  const v = await AsyncStorage.getItem(K.locationLastPos).catch(() => null);
+  if (!v) return null;
+  const [lat, lng] = v.split(",").map(Number);
+  return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+}
+export async function setLocationLastPos(lat: number, lng: number): Promise<void> {
+  await AsyncStorage.setItem(K.locationLastPos, `${lat},${lng}`).catch(() => {});
 }
 
 export async function getPresenceNoticeShown(): Promise<boolean> {
