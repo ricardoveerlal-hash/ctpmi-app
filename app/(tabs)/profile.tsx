@@ -5,6 +5,7 @@ import { Alert, Linking, Pressable, Switch, View } from "react-native";
 import { Avatar } from "@/components/Avatar";
 import { AppText, Button, Card, ErrorBlock, LoadingBlock, Screen, useAsync } from "@/components/ui";
 import { api } from "@/lib/api";
+import { checkAndFetchUpdate, restartApp, runningVersionLabel } from "@/lib/appUpdate";
 import { pickAndUploadAvatar } from "@/lib/avatar";
 import { MONTHS } from "@/lib/constants";
 import {
@@ -63,6 +64,29 @@ export default function Profile() {
   const [push, setPush] = useState<PushStatus>("undetermined");
   const [locPerm, setLocPerm] = useState<LocationPermission>("undetermined");
   const [locChoice, setLocChoice] = useState<"yes" | "no" | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [updateMsg, setUpdateMsg] = useState("");
+
+  async function checkForUpdate() {
+    if (checking) return;
+    setChecking(true);
+    setUpdateMsg("Checking...");
+    const r = await checkAndFetchUpdate();
+    setChecking(false);
+    if (r.kind === "ready") {
+      setUpdateMsg("Update downloaded. Restart to use it.");
+      Alert.alert("Update ready", "A new version of the app has been downloaded. Restart now to use it?", [
+        { text: "Later", style: "cancel" },
+        { text: "Restart", onPress: restartApp },
+      ]);
+    } else if (r.kind === "latest") {
+      setUpdateMsg("You are on the latest version.");
+    } else if (r.kind === "unsupported") {
+      setUpdateMsg("Updates are not available in this build.");
+    } else {
+      setUpdateMsg("Could not check. Check your internet and try again.");
+    }
+  }
 
   const loadPrefs = useCallback(async () => {
     setPush(await getPushStatus());
@@ -219,6 +243,15 @@ export default function Profile() {
           trackColor={{ true: theme.teal, false: theme.line }}
           thumbColor="#ffffff"
         />
+      </Card>
+
+      <Card style={{ gap: 8 }}>
+        <AppText variant="bodyStrong">App updates</AppText>
+        <AppText variant="small" color="muted">
+          The app updates itself when you open it. If something looks out of date, check here. Version: {runningVersionLabel()}
+        </AppText>
+        <Button label="Check for updates" kind="ghost" loading={checking} onPress={checkForUpdate} />
+        {!!updateMsg && <AppText variant="small" color="muted">{updateMsg}</AppText>}
       </Card>
 
       <Button label="Give" kind="gold" onPress={() => router.push("/(tabs)/give")} />
