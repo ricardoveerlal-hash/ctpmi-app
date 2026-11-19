@@ -2,7 +2,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Linking, Pressable, View } from "react-native";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 import { ImageViewer } from "@/components/ImageViewer";
 import { AppText, Button, Card, ErrorBlock, LOGO, LoadingBlock, Screen, useAsync } from "@/components/ui";
@@ -25,7 +25,6 @@ export default function Today() {
   const quiz = useAsync(() => api.getQuizToday(waId), [waId]);
   const news = useAsync(() => api.getLatest(), []);
 
-  const [revealed, setRevealed] = useState(false);
   const [devoOpen, setDevoOpen] = useState(false);
   const [flyerOpen, setFlyerOpen] = useState(false);
 
@@ -45,39 +44,6 @@ export default function Today() {
           </AppText>
         </View>
       </View>
-
-      <Card style={{ minHeight: 150, justifyContent: "center" }}>
-        <AppText variant="label">Verse of the day</AppText>
-        {verse.loading && <LoadingBlock label="Loading today's verse" />}
-        {verse.error && <ErrorBlock message="Couldn't load today's verse." onRetry={verse.reload} />}
-        {v && (
-          <Pressable accessibilityRole="button" accessibilityLabel="Reveal today's verse" onPress={() => setRevealed(true)}>
-            <AppText variant="h3" style={{ marginTop: 8, lineHeight: 26 }}>{v.text}</AppText>
-            <AppText variant="small" color="muted" style={{ marginTop: 6 }}>{v.ref}</AppText>
-            {!!v.encouragement && (
-              <AppText variant="small" color="muted" style={{ marginTop: 10 }}>{v.encouragement}</AppText>
-            )}
-            {!revealed && (
-              <Animated.View
-                exiting={FadeOut.duration(600)}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: theme.card,
-                  borderRadius: 12,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <AppText variant="bodyStrong" color="goldText">Tap to reveal today&apos;s verse</AppText>
-              </Animated.View>
-            )}
-          </Pressable>
-        )}
-      </Card>
 
       <Card style={{ backgroundColor: theme.teal, borderColor: theme.teal, gap: 10 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "baseline" }}>
