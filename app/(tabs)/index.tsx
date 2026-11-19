@@ -27,6 +27,7 @@ export default function Today() {
 
   const [devoOpen, setDevoOpen] = useState(false);
   const [flyerOpen, setFlyerOpen] = useState(false);
+  const [flyerRatio, setFlyerRatio] = useState<number | null>(null);
 
   const v = verse.data;
   const q = quiz.data;
@@ -88,7 +89,16 @@ export default function Today() {
       {n?.active && !!n.imageUrl && (
         <Card style={{ padding: 0, overflow: "hidden" }}>
           <Pressable accessibilityRole="imagebutton" accessibilityLabel={`${n.title ?? "Latest news"}. Tap to enlarge`} onPress={() => setFlyerOpen(true)}>
-            <Image source={{ uri: n.imageUrl }} style={{ width: "100%", height: 170 }} contentFit="cover" accessibilityLabel={n.title ?? "Latest news"} />
+            <Image
+              source={{ uri: n.imageUrl }}
+              style={{ width: "100%", aspectRatio: flyerRatio ?? 16 / 9 }}
+              contentFit="contain"
+              onLoad={(e) => {
+                const { width, height } = e.source;
+                if (width && height) setFlyerRatio(width / height);
+              }}
+              accessibilityLabel={n.title ?? "Latest news"}
+            />
           </Pressable>
           <ImageViewer uri={n.imageUrl} visible={flyerOpen} onClose={() => setFlyerOpen(false)} label={n.title ?? "Latest news"} />
           <View style={{ padding: 16, gap: 6 }}>
